@@ -3,7 +3,6 @@ package com.example.fulltextsearch.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -34,13 +33,18 @@ public abstract class BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        BaseEntity that = (BaseEntity) o;
-        return id != null && Objects.equals(id, that.id);
+        if (!(o instanceof BaseEntity that)) return false;
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(createdAt, that.createdAt)) return false;
+        return Objects.equals(modifiedAt, that.modifiedAt);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        result = 31 * result + (modifiedAt != null ? modifiedAt.hashCode() : 0);
+        return result;
     }
 }

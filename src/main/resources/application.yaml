@@ -18,5 +18,16 @@ spring:
         format_sql: true
         use_sql_comments: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        search:
+          schema_management:
+            strategy: drop-and-create
+          backend:
+            type: elasticsearch
+            hosts: localhost:9200
+            schema_management:
+              minimal_required_status: yellow
+            log:
+              json_pretty_printing: true
+
     hibernate:
       ddl-auto: none

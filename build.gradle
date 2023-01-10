@@ -1,3 +1,11 @@
+buildscript {
+    ext {
+        hibernate_search = '6.1.7.Final'
+        mapstruct = '1.5.3.Final'
+        openapi = '1.6.13'
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.7'
@@ -22,8 +30,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation "org.mapstruct:mapstruct:1.5.3.Final"
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.13'
+    implementation "org.mapstruct:mapstruct:${mapstruct}"
+    implementation "org.springdoc:springdoc-openapi-ui:${openapi}"
+    implementation "org.hibernate.search:hibernate-search-mapper-orm:${hibernate_search}"
+    implementation "org.hibernate.search:hibernate-search-backend-elasticsearch:${hibernate_search}"
 
     compileOnly 'org.projectlombok:lombok'
 
@@ -32,7 +42,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor "org.mapstruct:mapstruct-processor:1.5.3.Final"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct}"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

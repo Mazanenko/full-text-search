@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,18 +23,23 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "authors")
+@Indexed(index = "idx_author")
 public class Author extends BaseEntity {
     @Column(name = "first_name")
+    @FullTextField(name = "firstName")
     private String firstName;
 
     @Column(name = "middle_name")
+    @FullTextField(name = "middleName")
     private String middleName;
 
     @Column(name = "last_name")
+    @FullTextField(name = "lastName")
     private String lastName;
 
     @OneToMany(mappedBy = "author")
     @ToString.Exclude
+
     private Set<Book> books = new HashSet<>();
 
     @Override
