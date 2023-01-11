@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -63,7 +64,11 @@ public class BookController {
 
     @GetMapping("/search")
     public ResponseEntity<List<BookDto>> search(@RequestParam("field") @NotBlank String field,
-                                                @RequestParam("match") @NotBlank String match) {
-        return ResponseEntity.ok(bookSearchService.search(field, match));
+                                                @RequestParam("match") @NotBlank String match,
+                                                @RequestParam(value = "page", required = false)
+                                                @PositiveOrZero Integer page,
+                                                @RequestParam(value = "pageSize", required = false)
+                                                @Positive Integer pageSize) {
+        return ResponseEntity.ok(bookSearchService.search(field, match, page, pageSize));
     }
 }

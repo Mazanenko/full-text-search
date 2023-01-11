@@ -25,7 +25,20 @@ public class BookSearchServiceImpl implements BookSearchService {
     private final BookMapper bookMapper;
 
     @Override
-    public List<BookDto> search(String field, String match) {
+    public List<BookDto> search(String field, String match, Integer page, Integer pageSize) {
+        if (page == null || pageSize == null) {
+            return simpleSerach(field, match);
+        }
+        SearchSession searchSession = Search.session(entityManager);
+        SearchResult<Book> result = searchSession.search(Book.class)
+                .where(f -> f.match()
+                        .field(field)
+                        .matching(match))
+                .fetch(page * pageSize, pageSize);
+        return result.hits().stream().map(bookMapper::bookToDto).collect(Collectors.toList());
+    }
+
+    private List<BookDto> simpleSerach(String field, String match) {
         SearchSession searchSession = Search.session(entityManager);
         SearchResult<Book> result = searchSession.search(Book.class)
                 .where(f -> f.match()
