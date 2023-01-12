@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "books")
 @Indexed(index = "idx_book")
+@NamedEntityGraph(name = "withAuthor", attributeNodes = @NamedAttributeNode("author"))
 public class Book extends BaseEntity {
 
     @Column(name = "name")
@@ -40,7 +41,7 @@ public class Book extends BaseEntity {
     @GenericField(name = "price")
     private BigDecimal price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     @ToString.Exclude
     @IndexedEmbedded(includeDepth = 1)

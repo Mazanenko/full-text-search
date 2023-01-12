@@ -6,6 +6,7 @@ import com.example.fulltextsearch.service.BookSearchService;
 import com.example.fulltextsearch.util.mapstructMapper.BookMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.graph.GraphSemantic;
 import org.hibernate.search.engine.search.query.SearchResult;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
@@ -27,23 +28,25 @@ public class BookSearchServiceImpl implements BookSearchService {
     @Override
     public List<BookDto> search(String field, String match, Integer page, Integer pageSize) {
         if (page == null || pageSize == null) {
-            return simpleSerach(field, match);
+            return simpleSearch(field, match);
         }
         SearchSession searchSession = Search.session(entityManager);
         SearchResult<Book> result = searchSession.search(Book.class)
                 .where(f -> f.match()
                         .field(field)
                         .matching(match))
+                .loading(o -> o.graph("withAuthor", GraphSemantic.FETCH))
                 .fetch(page * pageSize, pageSize);
         return result.hits().stream().map(bookMapper::bookToDto).collect(Collectors.toList());
     }
 
-    private List<BookDto> simpleSerach(String field, String match) {
+    private List<BookDto> simpleSearch(String field, String match) {
         SearchSession searchSession = Search.session(entityManager);
         SearchResult<Book> result = searchSession.search(Book.class)
                 .where(f -> f.match()
                         .field(field)
                         .matching(match))
+                .loading(o -> o.graph("withAuthor", GraphSemantic.FETCH))
                 .fetchAll();
         return result.hits().stream().map(bookMapper::bookToDto).collect(Collectors.toList());
     }
